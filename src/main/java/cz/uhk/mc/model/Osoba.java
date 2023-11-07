@@ -1,10 +1,12 @@
 package cz.uhk.mc.model;
 
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable  //serializace
+@Introspected
 public class Osoba {
-    private Long id;
+    private long id;
     private String jmeno;
     private String prijmeni;
     private String email;
@@ -12,18 +14,18 @@ public class Osoba {
     public Osoba() {
     }
 
-    public Osoba(Long id, String jmeno, String prijmeni, String email) {
+    public Osoba(long id, String jmeno, String prijmeni, String email) {
         this.id = id;
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
         this.email = email;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

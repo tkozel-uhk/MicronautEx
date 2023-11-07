@@ -18,9 +18,9 @@ public class Application {
     @Bean
     public List<Osoba> getOsoby() {
         return new ArrayList<>(List.of(
-                new Osoba(0L, "Jan", "Novák", "jan@novak.cz"),
-                new Osoba(1L, "Petr", "Svoboda", "petr.svoboda@email.cz"),
-                new Osoba(2L, "Jana", "Králová", "jana@kralovi.com")
+                new Osoba(1L, "Jan", "Novák", "jan@novak.cz"),
+                new Osoba(2L, "Petr", "Svoboda", "petr.svoboda@email.cz"),
+                new Osoba(3L, "Jana", "Králová", "jana@kralovi.com")
         ));
     }
 }

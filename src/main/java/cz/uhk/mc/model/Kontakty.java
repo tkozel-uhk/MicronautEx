@@ -1,5 +1,6 @@
 package cz.uhk.mc.model;
 
+import io.micronaut.core.annotation.Introspected;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
