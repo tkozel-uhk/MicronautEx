@@ -1,11 +1,19 @@
 package cz.uhk.mc.model;
 
+import io.micronaut.core.annotation.Generated;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Serdeable  //serializace
+@Entity
 @Introspected
 public class Osoba {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String jmeno;
     private String prijmeni;

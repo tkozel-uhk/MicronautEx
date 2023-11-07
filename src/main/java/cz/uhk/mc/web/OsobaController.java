@@ -1,12 +1,13 @@
 package cz.uhk.mc.web;
 
-import cz.uhk.mc.model.Kontakty;
 import cz.uhk.mc.model.Osoba;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.micronaut.transaction.annotation.Transactional;
 import io.micronaut.views.View;
 import jakarta.inject.Inject;
+import cz.uhk.mc.repos.OsobaRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,42 +16,33 @@ import java.util.List;
 import java.util.Map;
 
 @Controller("/osoba")
-@Headers({
-        @Header(name = "Pragma", value = "no-cache"),
-        @Header(name = "Cache-Control", value = "no-cache, no-store, must-revalidate"),
-        @Header(name = "Expires", value = "0")
-})
 public class OsobaController {
-    private Kontakty kontakty;
+    private OsobaRepository osobaRepository;
 
     @Inject
-    public void setKontakty(Kontakty kontakty) {
-        this.kontakty = kontakty;
+    public void setOsobaRepository(OsobaRepository osobaRepository) {
+        this.osobaRepository = osobaRepository;
     }
 
-    @Get(produces = MediaType.APPLICATION_JSON)
+    @Get
     public List<Osoba> getAll() {
-        return kontakty.getOsoby();
+        return osobaRepository.findAll();
     }
 
     @Get("/html")
     @View("osoby")
     public Map<String, List<Osoba>> getAllHtml() {
-        return Collections.singletonMap("osoby", kontakty.getOsoby());
+        return Collections.singletonMap("osoby", osobaRepository.findAll());
     }
 
-    @Get(value = "/{id}", produces = MediaType.APPLICATION_JSON)
+    @Get("/{id}")
     public Osoba getOsobaById(long id) {
-        return kontakty.getOsoby().stream()
-                .filter(osoba -> osoba.getId() == id)
-                .findFirst()
-                .orElse(null);
+        return osobaRepository.findById(id).orElse(null);
     }
 
-    @Get(value = "/delete")
+    @Get("/delete")
     public HttpResponse<?> deleteOsobaById(@QueryValue long id) throws URISyntaxException {
-        List<Osoba> osoby = kontakty.getOsoby();
-        osoby.removeIf(osoba -> (osoba.getId() == id));
+        osobaRepository.deleteById(id);
         return HttpResponse.redirect(new URI("/osoba/html"));
     }
 
@@ -63,23 +55,14 @@ public class OsobaController {
     @Get("/{id}/edit")
     @View("osobaForm")
     public Map<String, Osoba> editOsoba(long id) {
-        Osoba osoba = kontakty.getOsoby().stream()
-                .filter(o -> o.getId() == id)
-                .findFirst()
-                .orElse(null);
+        Osoba osoba = osobaRepository.findById(id).orElse(null);
         return Collections.singletonMap("osoba", osoba);
     }
 
     @Post(value = "/save", consumes = MediaType.APPLICATION_FORM_URLENCODED)
+    @Transactional
     public HttpResponse<?> saveOsoba(@Body Osoba osoba) throws URISyntaxException {
-        List<Osoba> osoby = kontakty.getOsoby();
-        if (osoba.getId() == 0) {
-            osoba.setId(osoby.size()+1);
-        } else {
-            osoby.removeIf(o -> o.getId() == osoba.getId());
-        }
-        osoby.add(osoba);
-        osoby.sort((o1,o2) -> (int)(o1.getId() - o2.getId()));
+        osobaRepository.update(osoba);
         return HttpResponse.redirect(new URI("/osoba/html"));
     }
 

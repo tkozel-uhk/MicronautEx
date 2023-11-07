@@ -15,12 +15,4 @@ public class Application {
         Micronaut.run(Application.class, args);
     }
 
-    @Bean
-    public List<Osoba> getOsoby() {
-        return new ArrayList<>(List.of(
-                new Osoba(1L, "Jan", "Novák", "jan@novak.cz"),
-                new Osoba(2L, "Petr", "Svoboda", "petr.svoboda@email.cz"),
-                new Osoba(3L, "Jana", "Králová", "jana@kralovi.com")
-        ));
-    }
 }
