@@ -11,7 +11,10 @@ import cz.uhk.mc.repos.OsobaRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +26,8 @@ public class OsobaController {
     public void setOsobaRepository(OsobaRepository osobaRepository) {
         this.osobaRepository = osobaRepository;
     }
+    @Inject
+    DateTimeFormatter formatter;
 
     @Get
     public List<Osoba> getAll() {
@@ -31,8 +36,12 @@ public class OsobaController {
 
     @Get("/html")
     @View("osoby")
-    public Map<String, List<Osoba>> getAllHtml() {
-        return Collections.singletonMap("osoby", osobaRepository.findAll());
+    public HttpResponse<Map<String, Object>> getAllHtml() {
+        HashMap<String, Object> model = new HashMap<>();
+        //posleme 2 objekty - seznam osob a aktualni cas
+        model.put("osoby", osobaRepository.findAll());
+        model.put("time", LocalDateTime.now().format(formatter));
+        return HttpResponse.ok(model);
     }
 
     @Get("/{id}")
@@ -43,7 +52,7 @@ public class OsobaController {
     @Get("/delete")
     public HttpResponse<?> deleteOsobaById(@QueryValue long id) throws URISyntaxException {
         osobaRepository.deleteById(id);
-        return HttpResponse.redirect(new URI("/osoba/html"));
+        return HttpResponse.temporaryRedirect(new URI("/osoba/html"));
     }
 
     @Get("/add")

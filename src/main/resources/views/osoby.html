@@ -5,19 +5,19 @@
       crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
-    <title>SeznamOsob</title>
+    <title th:text="#{list.title}"/>
 </head>
 <body>
 
 <div class="container">
-    <h1>Seznam osob</h1>
+    <h1 th:text="#{list.title}"/>
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th>Jméno</th>
-            <th>Příjmení</th>
-            <th>Email</th>
-            <th>Operace</th>
+            <th th:text="#{name}"/>
+            <th th:text="#{surname}"/>
+            <th th:text="#{email}"/>
+            <th th:text="#{operations}"/>
         </tr>
         </thead>
         <tbody>
@@ -32,7 +32,10 @@
         </tr>
         </tbody>
     </table>
-    <a th:href="@{/osoba/add}" class="btn btn-success">Přidat</a>
+    <a th:href="@{/osoba/add}" class="btn btn-success" th:text="#{add}"/>
+    <div class="alert alert-primary">
+        <span th:text="${time}"/>
+    </div>
 </div>
 </body>
 </html>
